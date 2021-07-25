@@ -1,0 +1,56 @@
+link : https://leetcode.com/problems/minimum-number-of-taps-to-open-to-water-a-garden/submissions/
+
+sol : 
+  
+  
+  #include <bits/stdc++.h>
+using namespace std;
+
+int minTaps(int n, vector<int>& ranges) {
+        vector<vector<int> > interval(n+1);
+        for(int i = 0; i <= n; i++)
+        {
+            int l = max(0, i - ranges[i]);
+            int r = min(n, i + ranges[i]);
+            interval[i].push_back(l);
+            interval[i].push_back(r);
+
+        }
+        for(vector<int> x : interval)
+        {
+            cout << x[0] << " " << x[1] << endl;
+        }
+        
+        int best_reach_from_idx[n+1] = {0};
+        for(int i = 0; i <= n; i++)
+        {
+            best_reach_from_idx[interval[i][0]] = interval[i][1];
+        }
+        for(int i = 0; i <= n; i++)
+            cout << best_reach_from_idx[i] << " ";
+        
+        int cnt = 0;
+        int next = 0;
+        int max_reach = 0;
+        
+        for(int i = 0; i <= n; i++)
+        {
+            if(i > max_reach)
+                return -1;
+            if(next >= n)
+                return cnt;
+            max_reach = max(max_reach, best_reach_from_idx[i]);
+            if(i == next)
+            {
+                cnt++;
+                next = max_reach;
+            }
+        }
+        
+        return cnt;
+        
+    }
+int main() {
+    vector<int> ranges{0,3,3,2,2,4,2,1,5,1,0,1,2,3,0,3,1,1};
+    cout << minTaps(17, ranges);
+}
